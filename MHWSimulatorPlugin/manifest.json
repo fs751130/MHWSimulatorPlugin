@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+
+  "name": "MHW Armor Set Search Plugin",
+  "description": "MHW Armor Set Search Plugin",
+  "version": "1.0",
+
+  "permissions": [
+    "http://mhw.wiki-db.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://mhw.wiki-db.com/*"],
+	  "css": ["application.css"],
+      "js": ["jquery-3.3.1.min.js", "bootstrap.min.js", "jquery-sortable.js", "mhw_plugin.js"],
+	  "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+	"reorder_modal.html"
+  ]
+}
