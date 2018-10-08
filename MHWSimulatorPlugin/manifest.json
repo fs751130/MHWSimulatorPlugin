@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "MHW Armor Set Search Plugin",
-  "description": "MHW Armor Set Search Plugin",
+  "name": "MHW Simulator Plugin",
+  "description": "MHW Simulator Plugin",
   "version": "1.0",
 
   "permissions": [
