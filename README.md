@@ -22,6 +22,8 @@ Monster Hunter World Armor Set Search ("http://mhw.wiki-db.com/sim/?hl=zh-hant")
 
 必須要自行下載透過開發者模式安裝
 
+注意安裝後每次開啟 Chrome 時有可能跳出"請停用開發者模式擴充功能"的訊息
+
 ### 安裝步驟:
 
 1. 下載 MHWSimulatorPlugin 資料夾
