@@ -18,20 +18,8 @@ Monster Hunter World Armor Set Search ("http://mhw.wiki-db.com/sim/?hl=zh-hant")
 
 <br>
 
-由於此程式沒有上架於 Chrome 應用程式商店
+此程式也已上架於 Chrome 線上應用程式商店
 
-必須要自行下載透過開發者模式安裝
+https://chrome.google.com/webstore/detail/mhw-simulator-plugin/efgbjnfjkfglmcaheaojnkgcnihfmpci?hl=zh-TW&authuser=0
 
-注意安裝後每次開啟 Chrome 時有可能跳出"請停用開發者模式擴充功能"的訊息
-
-### 安裝步驟:
-
-1. 下載 MHWSimulatorPlugin 資料夾
-
-2. 打開 chrome 網址輸入 "chrome://extensions/"
-
-3. 確認右上角開發人員模式是開啟狀態
-
-4. 左上角載入未封裝項目，選擇 MHWSimulatorPlugin 資料夾
-
-以上動作完成即安裝完畢
+有興趣請自取
