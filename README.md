@@ -16,6 +16,8 @@ Monster Hunter World Armor Set Search ("http://mhw.wiki-db.com/sim/?hl=zh-hant")
 
 * 在'我的套裝'中最底下，增加 "Reorder" 按鈕，可自行拖曳調整套裝順序
 
+* 在'裝備設定'中，增加除外的下拉式選單，可直接新增要排除的裝備
+
 <br>
 
 此程式也已上架於 Chrome 線上應用程式商店
