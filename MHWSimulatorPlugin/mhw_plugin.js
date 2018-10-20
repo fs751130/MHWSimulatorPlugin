@@ -6,8 +6,16 @@ class localStorageController {
 		this.myset = JSON.parse(window.localStorage.getItem(hl + "myset"));
 	}
 	
+	static reload_exclude() {
+		this.exclude = JSON.parse(window.localStorage.getItem(hl + "exclude")) || [[],[],[],[],[],[]];
+	}
+	
 	static save() {
 		localStorage.setItem(hl + "myset", this.toUnicode(JSON.stringify(this.myset)));
+	}
+	
+	static save_exclude() {
+		localStorage.setItem(hl + "exclude", this.toUnicode(JSON.stringify(this.exclude)));
 	}
 	
 	static get_mySetName(i) {
@@ -17,6 +25,14 @@ class localStorageController {
 	static set_mySetName(i, newSetName) {
 		this.myset[i].mySetName = newSetName;
 		this.save();
+	}
+	
+	static get_exclude(i) {
+		return this.exclude[i];
+	}
+	
+	static add_exclude(i, val) {
+		this.exclude[i].push(val);
 	}
 	
 	static get_legnth() {
@@ -100,6 +116,7 @@ class localStorageController {
 					var newSetName = prompt("Please enter set name", $(this)[0].innerText) || $(this)[0].innerText;
 					$(this)[0].innerText = newSetName;
 					localStorageController.set_mySetName(event.data, newSetName);
+					$("#tab-myset a")[0].click();
 				});
 			}
 		});
@@ -145,4 +162,50 @@ class localStorageController {
 		setTimeout(addButton, 0);
 		setTimeout(addReorder, 0);
 	});
+	
+	function addExcludeItem(index, EQUIP_NAME) {
+		$.get(chrome.runtime.getURL("") + "exclude_div.html", function(data){
+			var newData = data.replace(/EQUIP_NAME/g, EQUIP_NAME).replace("PART", index.toString());
+			$($($("#excludeincludepane .includeexclude-section")[index]).find(".panel-body")[1]).append(newData);
+		});
+	}
+	
+	function addExclude() {
+		if (!$(".plugin_exclude").length) {
+			$("#excludeincludepane .includeexclude-section").each(function(i,l){
+				//add select
+				$($(l).find(".panel-body")[1]).prepend("<select style=\"margin-left: 14px\" part=\"" + i + "\" class=\"pin-select plugin_exclude\"></select>");
+				var excludeSelect = $($($(l).find(".panel-body")[1])).find("select");
+				
+				//copy select item
+				$($($("#excludeincludepane .includeexclude-section")[i]).find("select")[0]).find("option").each(function(j,m){
+					excludeSelect.append(m.outerHTML);
+				})
+				excludeSelect[0].selectedIndex = 0;
+				
+				//add change event
+				excludeSelect.change(function(){					
+					if ($(this)[0].selectedIndex != 0 && $(this)[0].selectedIndex != $(this).find("option").length-1)
+					{
+						localStorageController.reload_exclude();
+						var part = parseInt($(this).attr("part"));
+						var val = $(this).val();
+						
+						if ($.inArray(val, localStorageController.get_exclude(part)) == -1)
+						{
+							addExcludeItem(part, val);
+							localStorageController.add_exclude(part, val);
+							localStorageController.save_exclude();
+						}
+						$(this)[0].selectedIndex = 0;
+					}
+				});
+			});
+		}
+	}
+	
+	$("#excludeincludepane").bind("DOMSubtreeModified",function(){
+		setTimeout(addExclude, 0);
+	});
+	
 })();
