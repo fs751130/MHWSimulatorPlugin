@@ -26,9 +26,14 @@ https://chrome.google.com/webstore/detail/mhw-simulator-plugin/efgbjnfjkfglmcahe
 
 有興趣請自取
 
+<br>
 
 版本更新情報
+
 20190908_1.3
+
 修正網頁改版後無法使用的問題
+
 20181020_1.2
+
 裝備設定中，增加除外的下拉式選單
