@@ -35,6 +35,10 @@ class localStorageController {
 		this.exclude[i].push(val);
 	}
 	
+	static remove_exclude(i, val) {
+		this.exclude[i].splice(this.exclude[i].indexOf(val), 1);
+	}
+	
 	static get_legnth() {
 		if (!this.myset)
 			return 0;
@@ -63,42 +67,95 @@ class localStorageController {
 
 (function() {
 	
+	var weaponFlag, skillsFlag, skillsFlagNum;
+	
 	function setWeapon(skills) {
-		$("#weapon").children().each(function(i,l){
-			if (skills.indexOf(l.innerText) != -1) {
-				$("#weapon")[0].selectedIndex = i;
+		weaponFlag = false;
+		var val = setInterval(function(){
+			if ($("#weapon").length!=0) {
+				$("#weapon").children().each(function(i,l){
+					if (skills.indexOf(l.innerText) != -1) {
+						$("#weapon")[0].selectedIndex = i;
+					}
+				});				
+				setTimeout(function(){
+					$("#weapon")[0].dispatchEvent(new Event('change'));
+					weaponFlag = true;
+				},0);
+				clearInterval(val);
+			} else {
+				$("#ui div:first div:first div:first div:nth-child(2) select").attr("id","weapon");
 			}
-		});
+		}, 100);
 	}
 	
 	function setSkills(skills) {
-		$("#skilllistcontainer select").each(function(){
-			var select = $(this);
-			var skillpointname = select.attr("skillpointname");
-			
-			var match = false;
-			select.children().each(function(i,l){
-				if (l.innerText != skillpointname) {
-					if (skills.indexOf(l.innerText) != -1) {
-						match = true;
-						select[0].selectedIndex = i;
-						select.addClass("skillselected");
-						skills = skills.replace(l.innerText, "");
+		skillsFlag = false;
+		skillsFlagNum = 0;
+		var val = setInterval(function(){
+			if ($("#skilllistcontainer").length!=0) {
+				$("#skilllistcontainer select").each(function(){
+					var select = $(this);
+					
+					var skillpointname;
+					select.children().each(function(i,l){
+						if (!$(l).attr("value")) {
+							skillpointname = l.innerText;							
+						}
+					});
+					//var skillpointname = select.attr("skillpointname");
+					
+					var match = false;
+					select.children().each(function(i,l){
+						if (l.innerText != skillpointname) {
+							if (skills.indexOf(l.innerText) != -1) {
+								match = true;
+								select[0].selectedIndex = i;
+								//select.addClass("skillselected");
+								select.attr("style", "background-color: rgb(255, 255, 204);");
+								skills = skills.replace(l.innerText, "");
+							}
+						}
+					});
+					if (!match) {					
+						select.children().each(function(i,l){
+							if (l.innerText == skillpointname) {
+								select[0].selectedIndex = i;				
+							}
+						});
+						//select.removeClass("skillselected");
+						select.attr("style", "");
 					}
-				}
-			});
-			if (!match) {
-				select[0].selectedIndex = 1;
-				select.removeClass("skillselected");
+					setTimeout(function(){
+						select[0].dispatchEvent(new Event('change'));
+						skillsFlagNum++;
+					},0);
+				});
+				skillsFlag = true;
+				clearInterval(val);
+			} else {
+				$("#ui div:first div:first").children("div:nth-child(2)").attr("id","skilllistcontainer");
 			}
-		});
+		}, 100);
+	}
+	
+	function searchButtonClick() {
+		var val = setInterval(function(){
+			if ($("#searchbutton").length!=0 && weaponFlag && skillsFlag && skillsFlagNum == $("#skilllistcontainer select").length) {
+				$("#searchbutton")[0].click();
+				$("#searchbutton")[0].scrollIntoView();
+				clearInterval(val);
+			} else {
+				$("#ui button:first").attr("id","searchbutton");
+			}
+		}, 100);
 	}
 
 	function addButton() {
 		localStorageController.reload();
 		
 		$("#mysetpane .skillnamerow").each(function(i,l){
-			if ($(l).children().attr("colspan") == 7) {
+			if ($(l).children().find("button").length == 0) {
 				$(l).children().attr("colspan", 6);
 				
 				$(l).append("<td style=\"white-space: nowrap;\"><button>Search</button> <button>" + localStorageController.get_mySetName(i) + "</button></td>");
@@ -106,17 +163,18 @@ class localStorageController {
 					event.stopPropagation();
 					var skills = $(this).parent().prev()[0].innerText;
 					
+					$("#tab-search a")[0].click();
 					setWeapon(skills);
 					setSkills(skills);
-					$("#tab-search a")[0].click();
-					$("#searchbutton")[0].click();
+					searchButtonClick();
 				});
 				$(l).find("button").last().click(i, function(event){
 					event.stopPropagation();
 					var newSetName = prompt("Please enter set name", $(this)[0].innerText) || $(this)[0].innerText;
 					$(this)[0].innerText = newSetName;
 					localStorageController.set_mySetName(event.data, newSetName);
-					$("#tab-myset a")[0].click();
+					setTimeout(function(){$("#tab-search a")[0].click();},0);
+					setTimeout(function(){$("#tab-myset a")[0].click();},0);
 				});
 			}
 		});
@@ -152,60 +210,118 @@ class localStorageController {
 				addSortable();
 				$('#myModal').on('hidden.bs.modal', function (e) {
 					saveNewOrder();
-					$("#tab-myset a")[0].click();
+					setTimeout(function(){$("#tab-search a")[0].click();},0);
+					setTimeout(function(){$("#tab-myset a")[0].click();},0);
 				})
 			});
 		}		
 	}
 	
+	//add id
+	$($("#ui div .nav-tabs li")[0]).attr("id","tab-search");
+	$($("#ui div .nav-tabs li")[1]).attr("id","tab-myset");
+	$($("#ui div .nav-tabs li")[2]).attr("id","tab-excludeinclude");
+	
+	//
 	$("#tab-myset").click(function() {
+		$("#ui .table-responsive").attr("id","mysetpane");
 		setTimeout(addButton, 0);
 		setTimeout(addReorder, 0);
 	});
+	
+	function removeExcludeItem() {		
+		var part = parseInt($(this).attr("part"));
+		var equip = $(this).attr("equip");
+		var pp = this.parentNode.parentNode;
+		pp.parentNode.removeChild(pp);
+		localStorageController.remove_exclude(part, equip);
+		localStorageController.save_exclude();
+	}
 	
 	function addExcludeItem(index, EQUIP_NAME) {
 		$.get(chrome.runtime.getURL("") + "exclude_div.html", function(data){
 			var newData = data.replace(/EQUIP_NAME/g, EQUIP_NAME).replace("PART", index.toString());
 			$($($("#excludeincludepane .includeexclude-section")[index]).find(".panel-body")[1]).append(newData);
+			$($("#excludeincludepane .includeexclude-section")[index]).find("span").each(function(){
+				if ($(this).attr("equip") == EQUIP_NAME) {
+					$(this)[0].addEventListener("click",removeExcludeItem);
+				}
+			})
 		});
 	}
 	
 	function addExclude() {
-		if (!$(".plugin_exclude").length) {
-			$("#excludeincludepane .includeexclude-section").each(function(i,l){
-				//add select
-				$($(l).find(".panel-body")[1]).prepend("<select style=\"margin-left: 14px\" part=\"" + i + "\" class=\"pin-select plugin_exclude\"></select>");
-				var excludeSelect = $($($(l).find(".panel-body")[1])).find("select");
-				
-				//copy select item
-				$($($("#excludeincludepane .includeexclude-section")[i]).find("select")[0]).find("option").each(function(j,m){
-					excludeSelect.append(m.outerHTML);
-				})
-				excludeSelect[0].selectedIndex = 0;
-				
-				//add change event
-				excludeSelect.change(function(){					
-					if ($(this)[0].selectedIndex != 0 && $(this)[0].selectedIndex != $(this).find("option").length-1)
-					{
-						localStorageController.reload_exclude();
-						var part = parseInt($(this).attr("part"));
-						var val = $(this).val();
+		if ($("#excludeincludepane").length != 0) {
+			if ($(".plugin_exclude").length != 6) {
+				$("#excludeincludepane .includeexclude-section").each(function(i,l){
+					if ($(l).find(".plugin_exclude").length)
+						return;
 						
-						if ($.inArray(val, localStorageController.get_exclude(part)) == -1)
+					//add select
+					$($(l).find(".panel-body")[1]).prepend("<select style=\"margin-left: 14px\" part=\"" + i + "\" class=\"pin-select plugin_exclude\"></select>");
+					var excludeSelect = $($($(l).find(".panel-body")[1])).find("select");
+					
+					//copy select item
+					$($($("#excludeincludepane .includeexclude-section")[i]).find("select")[0]).find("option").each(function(j,m){
+						excludeSelect.append(m.outerHTML);
+					})
+					excludeSelect[0].selectedIndex = 0;
+					
+					//add change event
+					excludeSelect.change(function(){					
+						if ($(this)[0].selectedIndex != 0)
 						{
-							addExcludeItem(part, val);
-							localStorageController.add_exclude(part, val);
-							localStorageController.save_exclude();
+							localStorageController.reload_exclude();
+							var part = parseInt($(this).attr("part"));
+							var equip = $(this).val();
+							
+							if ($.inArray(equip, localStorageController.get_exclude(part)) == -1)
+							{
+								addExcludeItem(part, equip);
+								localStorageController.add_exclude(part, equip);
+								localStorageController.save_exclude();
+							}
+							$(this)[0].selectedIndex = 0;
 						}
-						$(this)[0].selectedIndex = 0;
-					}
+					});
 				});
-			});
+			}
+			// remove duplicate
+			$("#excludeincludepane .includeexclude-section span").each(function(){
+				if ($(this).attr("equip")) {
+					var part = parseInt($(this).attr("part"));
+					var equip = $(this).attr("equip");
+					var hasDuplicate = false;
+					$($("#excludeincludepane .includeexclude-section")[part]).find("span").each(function(){
+						if (!$(this).attr("equip")) {						
+							var innerText = this.parentNode.parentNode.innerText;
+							if (innerText.replace($(this).attr("equip"),"").trim()) {
+								hasDuplicate = true;
+							}
+						}						
+					})
+					if (hasDuplicate) {
+						var pp = this.parentNode.parentNode;
+						pp.parentNode.removeChild(pp);
+					}						
+				}
+			})			
+		} else {
+			var div = $("#ui div:first div:first div:first");
+			if (div.find(".includeexclude-section").length)
+				div.attr("id","excludeincludepane");	
 		}
-	}
+	}	
 	
-	$("#excludeincludepane").bind("DOMSubtreeModified",function(){
-		setTimeout(addExclude, 0);
-	});
-	
+	var addExcludeFlag = false;
+	$("#tab-excludeinclude").click(function() {
+		if (!addExcludeFlag)
+		{
+			var val = setInterval(function(){
+				if ($(".plugin_exclude").length != 6)
+					setTimeout(addExclude, 0);			
+			}, 100);
+			addExcludeFlag = true;
+		}
+	});	
 })();
