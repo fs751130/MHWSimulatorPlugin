@@ -108,12 +108,12 @@ class localStorageController {
 					var match = false;
 					select.children().each(function(i,l){
 						if (l.innerText != skillpointname) {
-							if (skills.indexOf(l.innerText) != -1) {
+							if (skills.indexOf($(l).attr("value")) != -1) {
 								match = true;
 								select[0].selectedIndex = i;
 								//select.addClass("skillselected");
 								select.attr("style", "background-color: rgb(255, 255, 204);");
-								skills = skills.replace(l.innerText, "");
+								skills = skills.replace($(l).attr("value"), "");
 							}
 						}
 					});
