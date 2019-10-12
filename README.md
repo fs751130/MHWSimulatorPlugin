@@ -30,6 +30,10 @@ https://chrome.google.com/webstore/detail/mhw-simulator-plugin/efgbjnfjkfglmcahe
 
 版本更新情報
 
+20191012_1.4
+
+修正極意技能的搜尋問題
+
 20190908_1.3
 
 修正網頁改版後無法使用的問題
