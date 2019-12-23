@@ -77,14 +77,21 @@ class localStorageController {
 					if (skills.indexOf(l.innerText) != -1) {
 						$("#weapon")[0].selectedIndex = i;
 					}
-				});				
+				});
+				$("#weapon2").children().each(function(i,l){
+					if (skills.indexOf(l.innerText) != -1) {
+						$("#weapon2")[0].selectedIndex = i;
+					}
+				});			
 				setTimeout(function(){
 					$("#weapon")[0].dispatchEvent(new Event('change'));
+					$("#weapon2")[0].dispatchEvent(new Event('change'));
 					weaponFlag = true;
 				},0);
 				clearInterval(val);
 			} else {
 				$("#ui div:first div:first div:first div:nth-child(2) select").attr("id","weapon");
+				$("#ui div:first div:first div:first div:nth-child(3) select").attr("id","weapon2");
 			}
 		}, 100);
 	}
