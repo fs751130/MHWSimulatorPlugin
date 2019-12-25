@@ -78,8 +78,9 @@ class localStorageController {
 						$("#weapon")[0].selectedIndex = i;
 					}
 				});
+				$("#weapon2")[0].selectedIndex = 0;
 				$("#weapon2").children().each(function(i,l){
-					if (skills.indexOf(l.innerText) != -1) {
+					if (skills.indexOf(l.innerText) != -1 && skills.indexOf(l.innerText) != skills.indexOf(l.innerText + ")")) {
 						$("#weapon2")[0].selectedIndex = i;
 					}
 				});			

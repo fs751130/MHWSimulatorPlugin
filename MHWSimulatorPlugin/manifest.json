@@ -3,7 +3,7 @@
 
   "name": "MHW Simulator Plugin",
   "description": "MHW Simulator Plugin",
-  "version": "1.5",
+  "version": "1.6",
 
   "permissions": [
     "https://mhw.wiki-db.com/*"
