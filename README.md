@@ -30,13 +30,17 @@ https://chrome.google.com/webstore/detail/mhw-simulator-plugin/efgbjnfjkfglmcahe
 
 版本更新情報
 
-20191223_1.5
+20191226_1.6
 
 修正冥赤武器套裝技能搜尋問題
 
+20191223_1.5
+
+增加冥赤武器套裝技能搜尋功能
+
 20191012_1.4
 
-修正極意技能的搜尋問題
+增加極意技能的搜尋功能
 
 20190908_1.3
 
