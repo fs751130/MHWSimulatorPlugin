@@ -30,6 +30,10 @@ https://chrome.google.com/webstore/detail/mhw-simulator-plugin/efgbjnfjkfglmcahe
 
 版本更新情報
 
+20200430_1.7
+
+修正套裝技能+n 的搜尋問題
+
 20191226_1.6
 
 修正冥赤武器套裝技能搜尋問題
